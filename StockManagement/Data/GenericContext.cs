@@ -1,17 +1,26 @@
 using Microsoft.EntityFrameworkCore;
 using StockManagement.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace StockManagement.Data
 {
-#pragma warning disable
+    /// <summary>
+    /// Database context for the StockManagement application.
+    /// </summary>
     public class GenericContext : DbContext
     {
         public GenericContext(DbContextOptions<GenericContext> options) : base(options) { }
 
-        public DbSet<Item> Items { get; set; }
+        /// <summary>
+        /// Products table.
+        /// </summary>
+        public DbSet<Product> Products { get; set; }
 
-        public int RunQuery(string q)
+        /// <summary>
+        /// Executes a raw SQL query if using a relational provider.
+        /// </summary>
+        /// <param name="sql">The SQL command to execute.</param>
+        /// <returns>Number of affected rows, or 0 for InMemory.</returns>
+        public int RunQuery(string sql)
         {
             // Only run raw SQL if provider is relational, otherwise do nothing (for InMemory)
             if (Database.ProviderName != null && Database.ProviderName.Contains("InMemory"))
@@ -19,8 +28,7 @@ namespace StockManagement.Data
                 // Simulate success, but do nothing
                 return 0;
             }
-            return Database.ExecuteSqlRaw(q);
+            return Database.ExecuteSqlRaw(sql);
         }
     }
-#pragma warning restore
 }
